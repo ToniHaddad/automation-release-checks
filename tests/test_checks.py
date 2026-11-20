@@ -160,3 +160,13 @@ def test_cli_exit_codes(capsys, monkeypatch):
     assert main(["check", "samples/noncompliant", *rest, "--format", "github"]) == 1
     assert main(["check", "samples/malformed", *rest, "--format", "json"]) == 1
     capsys.readouterr()
+
+
+def test_connector_used_in_action_but_not_declared(tmp_path):
+    sol = _copy_compliant(tmp_path)
+    (sol / "Workflows" / "a.json").write_text(
+        '{"properties": {"connectionReferences": {}, "definition": {"actions": {"Tweet": {'
+        '"type": "OpenApiConnection", "inputs": {"host": {"connectionName": "shared_twitter", '
+        '"apiId": "/providers/Microsoft.PowerApps/apis/shared_twitter"}}}}}}}', encoding="utf-8")
+    f = run_check(str(sol), str(ROOT / "governance.yml"), str(ROOT / "rules.yml"), TODAY)
+    assert rules_of(f) == ["PPRC001"] and "shared_twitter" in f[0].message

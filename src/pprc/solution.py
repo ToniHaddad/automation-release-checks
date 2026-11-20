@@ -152,6 +152,19 @@ def _load_customizations(root: Path, sol: Solution, disp) -> None:
             f"connection reference '{logical}'"))
 
 
+def _walk_hosts(node):
+    """Yield (connectionName, apiId) for every action or trigger 'host' object."""
+    if isinstance(node, dict):
+        host = node.get("host")
+        if isinstance(host, dict) and (host.get("connectionName") or host.get("apiId")):
+            yield host.get("connectionName"), host.get("apiId")
+        for v in node.values():
+            yield from _walk_hosts(v)
+    elif isinstance(node, list):
+        for v in node:
+            yield from _walk_hosts(v)
+
+
 def _load_workflows(root: Path, sol: Solution, disp) -> None:
     wf_dir = root / "Workflows"
     if not wf_dir.is_dir():
@@ -191,3 +204,13 @@ def _load_workflows(root: Path, sol: Solution, disp) -> None:
             sol.connectors.append(ConnectorUse(
                 normalise_connector(raw), raw, d, line,
                 f"flow '{path.stem}'"))
+        declared = {normalise_connector(u.raw) for u in sol.connectors if u.file == d}
+        for conn_name, api_id in _walk_hosts(props.get("definition")):
+            raw = api_id if isinstance(api_id, str) and api_id else conn_name
+            if not isinstance(raw, str) or normalise_connector(raw) in declared:
+                continue
+            declared.add(normalise_connector(raw))
+            sol.connectors.append(ConnectorUse(
+                normalise_connector(raw), raw, d,
+                find_line(text, f'"{conn_name or api_id}"', base),
+                f"an action in flow '{path.stem}' (not listed in connectionReferences)"))
