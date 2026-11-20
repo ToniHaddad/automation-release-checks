@@ -1,0 +1,16 @@
+# Organisational rules. Change these through a reviewed pull request, not in code.
+# A connector is the last part of its id: /providers/Microsoft.PowerApps/apis/shared_x -> shared_x
+approved_connectors:
+  - shared_sharepointonline
+  - shared_office365
+  - shared_office365users
+  - shared_teams
+  - shared_approvals
+  - shared_excelonlinebusiness
+  - shared_commondataserviceforapps
+
+data_classifications:
+  - public
+  - internal
+  - confidential
+  - restricted

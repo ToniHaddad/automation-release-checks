@@ -1,0 +1,21 @@
+# Governance manifest: one entry per solution, keyed by the solution unique name
+# (Other/Solution.xml, SolutionManifest/UniqueName). Names and dates are fictional.
+solutions:
+  NorthbridgeFieldReports:        # solutions/field-reporting, the live solution
+    owner: Amira Khoury, Programme Manager (Lebanon)
+    data_classification: internal
+    review_date: 2035-06-30
+
+  NorthbridgeFieldReporting:      # samples/compliant
+    owner: Amira Khoury, Programme Manager (Lebanon)
+    data_classification: internal
+    review_date: 2035-06-30
+
+  NorthbridgeBeneficiaryIntake:   # samples/noncompliant: no owner, review overdue
+    data_classification: confidential
+    review_date: 2025-01-31
+
+  NorthbridgeDraftTracker:        # samples/malformed
+    owner: Daniel Mwangi, Country Operations (Kenya)
+    data_classification: internal
+    review_date: 2035-06-30

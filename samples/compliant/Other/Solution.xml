@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml version="9.2.24101.1" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SolutionManifest>
+    <UniqueName>NorthbridgeFieldReporting</UniqueName>
+    <LocalizedNames>
+      <LocalizedName description="Field Reporting" languagecode="1033" />
+    </LocalizedNames>
+    <Descriptions />
+    <Version>1.0.0.1</Version>
+    <Managed>0</Managed>
+    <Publisher>
+      <UniqueName>northbridge</UniqueName>
+      <LocalizedNames>
+        <LocalizedName description="Northbridge Relief" languagecode="1033" />
+      </LocalizedNames>
+      <CustomizationPrefix>nbr</CustomizationPrefix>
+    </Publisher>
+    <RootComponents>
+      <RootComponent type="29" id="{3f0c1b1e-9a52-4c1d-8f27-0a1b2c3d4e01}" behavior="0" />
+    </RootComponents>
+    <MissingDependencies />
+  </SolutionManifest>
+</ImportExportXml>
