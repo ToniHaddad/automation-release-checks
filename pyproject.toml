@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pprc"
+version = "0.1.0"
+description = "Release checks for unpacked Power Platform solutions"
+requires-python = ">=3.10"
+dependencies = ["pyyaml>=6"]
+license = { text = "MIT" }
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+pprc = "pprc.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
