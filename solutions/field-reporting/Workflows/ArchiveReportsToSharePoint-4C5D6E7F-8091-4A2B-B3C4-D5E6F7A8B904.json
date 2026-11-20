@@ -10,13 +10,13 @@
           "name": "shared_sharepointonline"
         }
       },
-      "shared_dropbox": {
+      "shared_office365": {
         "runtimeSource": "embedded",
         "connection": {
-          "connectionReferenceLogicalName": "nbr_shareddropbox"
+          "connectionReferenceLogicalName": "nbr_sharedoffice365"
         },
         "api": {
-          "name": "shared_dropbox"
+          "name": "shared_office365"
         }
       }
     },
@@ -52,9 +52,9 @@
           "type": "OpenApiConnection",
           "inputs": {
             "host": {
-              "connectionName": "shared_dropbox",
+              "connectionName": "shared_office365",
               "operationId": "PostMessage",
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_dropbox"
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
             },
             "parameters": {}
           }

@@ -32,13 +32,6 @@
       <statecode>0</statecode>
       <statuscode>1</statuscode>
     </connectionreference>
-    <connectionreference connectionreferencelogicalname="nbr_shareddropbox">
-      <connectionreferencedisplayname>Dropbox connection</connectionreferencedisplayname>
-      <connectorid>/providers/Microsoft.PowerApps/apis/shared_dropbox</connectorid>
-      <iscustomizable>1</iscustomizable>
-      <statecode>0</statecode>
-      <statuscode>1</statuscode>
-    </connectionreference>
   </connectionreferences>
   <Languages>
     <Language>1033</Language>
