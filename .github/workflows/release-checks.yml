@@ -1,0 +1,40 @@
+name: Release checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  live-solution:
+    name: Check solutions/field-reporting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./
+        with:
+          solution: solutions/field-reporting
+  samples:
+    name: Check the sample solutions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compliant sample must pass
+        uses: ./
+        with:
+          solution: samples/compliant
+      - name: Noncompliant sample must fail
+        id: bad
+        continue-on-error: true
+        uses: ./
+        with:
+          solution: samples/noncompliant
+          format: text
+      - name: Malformed sample must fail
+        id: malformed
+        continue-on-error: true
+        uses: ./
+        with:
+          solution: samples/malformed
+          format: text
+      - name: Confirm the two bad samples were rejected
+        if: ${{ steps.bad.outcome != 'failure' || steps.malformed.outcome != 'failure' }}
+        run: echo "A bad sample was not rejected" && exit 1
