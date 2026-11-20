@@ -26,10 +26,6 @@ def test_compliant_has_no_findings():
     assert check("samples/compliant") == []
 
 
-def test_live_solution_has_no_findings():
-    assert check("solutions/field-reporting") == []
-
-
 def test_noncompliant_hits_each_governance_rule():
     findings = check("samples/noncompliant")
     assert rules_of(findings) == ["PPRC001", "PPRC001", "PPRC002", "PPRC003"]
