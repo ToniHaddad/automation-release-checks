@@ -13,7 +13,7 @@ ASSIGNMENT = re.compile(
     ["']?\s*[:=]\s*
     ["'](?P<value>[^"'\s]{8,})["']
     """)
-BEARER = re.compile(r"(?i)\bbearer\s+(?P<value>[A-Za-z0-9._\-]{16,})")
+BEARER = re.compile(r"(?i)\b(?:bearer|basic)\s+(?P<value>[A-Za-z0-9._+/=\-]{16,})")
 KNOWN = [
     ("a GitHub token", re.compile(r"\bgh[pousr]_[A-Za-z0-9]{30,}\b")),
     ("a Slack token", re.compile(r"\bxox[abprs]-[A-Za-z0-9-]{10,}\b")),
@@ -61,7 +61,7 @@ def scan_text(text: str, allowed_emails: set[str] | frozenset[str] = frozenset()
             add("secret", f"looks like {label} ({mask(m.group(0))})", m.start(), m.end())
     for m in BEARER.finditer(text):
         if not is_placeholder(m.group("value")):
-            add("secret", f"a literal bearer token ({mask(m.group('value'))})", m.start(), m.end())
+            add("secret", f"a literal bearer or basic auth value ({mask(m.group('value'))})", m.start(), m.end())
     for m in ASSIGNMENT.finditer(text):
         if not is_placeholder(m.group("value")):
             add("secret", f"'{m.group('name')}' is set to a literal value ({mask(m.group('value'))})",

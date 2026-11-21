@@ -61,3 +61,8 @@ def test_secret_key_matches_word_endings_only():
 def test_email_allowlist():
     assert scan_text("to: a@example.org", frozenset({"a@example.org"})) == []
     assert scan_text("to: a@example.org")[0].kind == "email"
+
+
+def test_literal_basic_auth_header_is_a_secret():
+    assert scan_text('{auth: "Basic dXNlcjpwYXNzd29yZDEyMw=="}')[0].kind == "secret"
+    assert scan_text('{auth: "Basic " + encoded}') == []
