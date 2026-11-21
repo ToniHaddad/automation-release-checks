@@ -10,11 +10,12 @@ from .report import FORMATS
 
 
 def main(argv: list[str] | None = None) -> int:
-    p = argparse.ArgumentParser(prog="pprc", description="Power Platform release checks")
+    p = argparse.ArgumentParser(prog="arc", description="Release checks for n8n workflows and Apps Script projects")
     p.add_argument("--version", action="version", version=__version__)
     sub = p.add_subparsers(dest="cmd", required=True)
-    c = sub.add_parser("check", help="check an unpacked solution folder")
-    c.add_argument("solution_dir")
+    c = sub.add_parser("check", help="check one or more automation folders")
+    c.add_argument("paths", nargs="+", metavar="DIR",
+                   help="folder of n8n workflow JSON files, or a clasp-pulled Apps Script project")
     c.add_argument("--manifest", default="governance.yml")
     c.add_argument("--rules", default="rules.yml")
     c.add_argument("--format", choices=sorted(FORMATS), default="text")
@@ -27,7 +28,7 @@ def main(argv: list[str] | None = None) -> int:
             today = dt.date.fromisoformat(args.today)
         except ValueError:
             p.error("--today must be YYYY-MM-DD")
-    findings = run_check(args.solution_dir, args.manifest, args.rules, today)
+    findings = run_check(args.paths, args.manifest, args.rules, today)
     sys.stdout.write(FORMATS[args.format](findings))
     return 1 if findings else 0
 

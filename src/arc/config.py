@@ -9,19 +9,21 @@ import yaml
 
 from .lines import yaml_key_lines
 from .models import Finding
-from .solution import normalise_connector
 
 DEFAULT_CLASSIFICATIONS = ["public", "internal", "confidential", "restricted"]
 
 
 @dataclass
 class Rules:
-    approved_connectors: set[str]
+    node_types: set[str]
+    credential_types: set[str]
+    oauth_scopes: set[str]
+    allowed_emails: frozenset[str] = frozenset()
     classifications: list[str] = field(default_factory=lambda: list(DEFAULT_CLASSIFICATIONS))
 
 
 @dataclass
-class SolutionEntry:
+class AutomationEntry:
     owner: str | None
     classification: str | None
     review_date: object  # date, str or None
@@ -31,7 +33,7 @@ class SolutionEntry:
 @dataclass
 class Manifest:
     path: str
-    solutions: dict[str, SolutionEntry]
+    automations: dict[str, AutomationEntry]
 
 
 def _load_yaml(path: Path, shown: str, rule: str, what: str):
@@ -55,18 +57,36 @@ def _load_yaml(path: Path, shown: str, rule: str, what: str):
     return data, yaml_key_lines(text), None
 
 
+LIST_KEYS = {
+    "approved_n8n_node_types": "node_types",
+    "approved_n8n_credential_types": "credential_types",
+    "approved_oauth_scopes": "oauth_scopes",
+}
+
+
 def load_rules(path: Path, shown: str) -> tuple[Rules | None, list[Finding]]:
-    data, lines, err = _load_yaml(path, shown, "PPRC104", "rules file")
+    data, lines, err = _load_yaml(path, shown, "ARC104", "rules file")
     if err:
         return None, [err]
-    ok = (isinstance(data, dict) and isinstance(data.get("approved_connectors"), list)
-          and all(isinstance(c, str) for c in data["approved_connectors"]))
-    if not ok:
-        return None, [Finding(
-            "PPRC104", "Rules file must be a mapping with an 'approved_connectors' list of strings.",
-            "Add approved_connectors: [shared_sharepointonline, ...] to the rules file.",
-            shown, lines.get(("approved_connectors",), 1))]
-    rules = Rules({normalise_connector(c) for c in data["approved_connectors"]})
+    if not isinstance(data, dict):
+        return None, [Finding("ARC104", "Rules file must be a YAML mapping.",
+                              "Add the three approved_* lists; see rules.yml in the repository.", shown, 1)]
+    out: dict[str, set[str]] = {}
+    for key, attr in LIST_KEYS.items():
+        val = data.get(key)
+        if not isinstance(val, list) or not all(isinstance(v, str) for v in val):
+            return None, [Finding(
+                "ARC104", f"Rules file needs '{key}' as a list of strings.",
+                f"Add {key}: [...] to the rules file (an empty list approves nothing).",
+                shown, lines.get((key,), 1))]
+        out[attr] = {v.strip() for v in val}
+    emails = data.get("allowed_email_addresses", [])
+    if not isinstance(emails, list) or not all(isinstance(v, str) for v in emails):
+        return None, [Finding("ARC104", "'allowed_email_addresses' must be a list of strings.",
+                              "Fix the list or remove the key.", shown,
+                              lines.get(("allowed_email_addresses",), 1))]
+    rules = Rules(out["node_types"], out["credential_types"], out["oauth_scopes"],
+                  frozenset(e.strip().lower() for e in emails))
     cls = data.get("data_classifications")
     if isinstance(cls, list) and cls and all(isinstance(c, str) for c in cls):
         rules.classifications = [c.lower() for c in cls]
@@ -74,28 +94,28 @@ def load_rules(path: Path, shown: str) -> tuple[Rules | None, list[Finding]]:
 
 
 def load_manifest(path: Path, shown: str) -> tuple[Manifest | None, list[Finding]]:
-    data, lines, err = _load_yaml(path, shown, "PPRC103", "governance manifest")
+    data, lines, err = _load_yaml(path, shown, "ARC103", "governance manifest")
     if err:
         return None, [err]
-    sols = data.get("solutions") if isinstance(data, dict) else None
+    sols = data.get("automations") if isinstance(data, dict) else None
     if not isinstance(sols, dict):
         return None, [Finding(
-            "PPRC103",
-            "Governance manifest must have a 'solutions' mapping keyed by solution unique name.",
+            "ARC103",
+            "Governance manifest must have a 'automations' mapping keyed by the automation folder name.",
             "See governance.yml in the repository for the expected shape.", shown,
-            lines.get(("solutions",), 1))]
-    out: dict[str, SolutionEntry] = {}
+            lines.get(("automations",), 1))]
+    out: dict[str, AutomationEntry] = {}
     for name, body in sols.items():
         body = body if isinstance(body, dict) else {}
-        key = ("solutions", str(name))
+        key = ("automations", str(name))
         owner = body.get("owner")
         cls = body.get("data_classification")
-        out[str(name)] = SolutionEntry(
+        out[str(name)] = AutomationEntry(
             owner=owner if isinstance(owner, str) else None,
             classification=cls if isinstance(cls, str) else None,
             review_date=body.get("review_date"),
             lines={
-                "solution": lines.get(key),
+                "entry": lines.get(key),
                 "owner": lines.get(key + ("owner",)),
                 "data_classification": lines.get(key + ("data_classification",)),
                 "review_date": lines.get(key + ("review_date",)),

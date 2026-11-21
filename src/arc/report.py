@@ -48,7 +48,7 @@ def as_github(findings: list[Finding]) -> str:
         props += f",title={_esc_prop(f.rule + ' ' + RULE_TITLES.get(f.rule, ''))}"
         out.append(f"::error {props}::{_esc_data(f.message + ' Fix: ' + f.remediation)}")
     n = len(findings)
-    out.append(f"pprc: FAILED, {n} finding(s)" if n else "pprc: OK, no findings")
+    out.append(f"arc: FAILED, {n} finding(s)" if n else "arc: OK, no findings")
     return "\n".join(out) + "\n"
 
 

@@ -1,13 +1,35 @@
 # Organisational rules. Change these through a reviewed pull request, not in code.
-# A connector is the last part of its id: /providers/Microsoft.PowerApps/apis/shared_x -> shared_x
-approved_connectors:
-  - shared_sharepointonline
-  - shared_office365
-  - shared_office365users
-  - shared_teams
-  - shared_approvals
-  - shared_excelonlinebusiness
-  - shared_commondataserviceforapps
+
+# n8n: node types (the "type" of each node in an exported workflow).
+approved_n8n_node_types:
+  - n8n-nodes-base.scheduleTrigger
+  - n8n-nodes-base.manualTrigger
+  - n8n-nodes-base.errorTrigger
+  - n8n-nodes-base.supabase
+  - n8n-nodes-base.googleSheets
+  - n8n-nodes-base.code
+  - n8n-nodes-base.if
+  - n8n-nodes-base.set
+  - n8n-nodes-base.emailSend
+  - n8n-nodes-base.stickyNote
+
+# n8n: credential types a node may use (the keys under "credentials").
+approved_n8n_credential_types:
+  - supabaseApi
+  - googleSheetsOAuth2Api
+  - smtp
+
+# Apps Script: OAuth scopes listed in appsscript.json.
+approved_oauth_scopes:
+  - https://www.googleapis.com/auth/spreadsheets
+  - https://www.googleapis.com/auth/script.send_mail
+  - https://www.googleapis.com/auth/script.external_request
+  - https://www.googleapis.com/auth/script.container.ui
+
+# Shared role mailboxes that may appear literally in code. Any other literal
+# address is a finding: recipients belong in a sheet, a Script Property or a credential.
+allowed_email_addresses:
+  - supply-chain@example.org
 
 data_classifications:
   - public
