@@ -1,5 +1,5 @@
 {
-  "name": "Low stock chat alert",
+  "name": "Low stock email alert",
   "nodes": [
     {
       "parameters": {
@@ -44,23 +44,23 @@
     },
     {
       "parameters": {
-        "resource": "message",
-        "channel": "#supply-chain",
-        "accessToken": "stk-demo-7f3a91c2d4e8b605",
+        "fromEmail": "supply-chain@example.org",
+        "toEmail": "supply-chain@example.org",
+        "subject": "Low stock",
         "text": "={{ $json.item }} is below its reorder level in {{ $json.warehouse }}"
       },
       "id": "00000003-1a2b-4c3d-8e9f-0a1b2c3d4e5f",
-      "name": "Post to chat",
-      "type": "n8n-nodes-base.slack",
+      "name": "Email low stock",
+      "type": "n8n-nodes-base.emailSend",
       "typeVersion": 2,
       "position": [
         440,
         0
       ],
       "credentials": {
-        "slackApi": {
-          "id": "sl01",
-          "name": "Chat bot"
+        "smtp": {
+          "id": "sm01",
+          "name": "Organisation mail"
         }
       }
     }
@@ -82,7 +82,7 @@
       "main": [
         [
           {
-            "node": "Post to chat",
+            "node": "Email low stock",
             "type": "main",
             "index": 0
           }
