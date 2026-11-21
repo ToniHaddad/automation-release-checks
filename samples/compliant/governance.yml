@@ -1,0 +1,17 @@
+# Governance manifest: one entry per automation, keyed by its folder name.
+# Roles and dates are invented.
+automations:
+  rental-reminders:
+    owner: Property and administration officer
+    data_classification: internal
+    review_date: 2035-06-30
+
+  purchase-order-push:
+    owner: Procurement officer
+    data_classification: internal
+    review_date: 2035-06-30
+
+  stock-digest:
+    owner: Supply chain coordinator
+    data_classification: internal
+    review_date: 2035-06-30
