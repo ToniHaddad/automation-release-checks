@@ -131,9 +131,9 @@ def test_approved_node_types_pass(env):
 
 
 def test_credential_type_not_on_allowlist(env):
-    env.put_wf(workflow([node("supabase", creds=["supabaseApi", "dropboxOAuth2Api"])]))
+    env.put_wf(workflow([node("supabase", creds=["supabaseApi", "trelloApi"])]))
     f = env.run()
-    assert ids(f) == ["ARC002"] and "dropboxOAuth2Api" in f[0].message
+    assert ids(f) == ["ARC002"] and "trelloApi" in f[0].message
 
 
 def test_oauth_scope_not_on_allowlist(env):
