@@ -4,37 +4,40 @@ on:
     branches: [main]
   pull_request:
 jobs:
-  live-solution:
-    name: Check solutions/field-reporting
+  live-automations:
+    name: Check automations/
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: ./
         with:
-          solution: solutions/field-reporting
+          paths: automations/*
   samples:
-    name: Check the sample solutions
+    name: Check the sample sets
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Compliant sample must pass
+      - name: Compliant set must pass
         uses: ./
         with:
-          solution: samples/compliant
-      - name: Noncompliant sample must fail
+          paths: samples/compliant/automations/*
+          manifest: samples/compliant/governance.yml
+      - name: Noncompliant set must fail
         id: bad
         continue-on-error: true
         uses: ./
         with:
-          solution: samples/noncompliant
+          paths: samples/noncompliant/automations/*
+          manifest: samples/noncompliant/governance.yml
           format: text
-      - name: Malformed sample must fail
+      - name: Malformed set must fail
         id: malformed
         continue-on-error: true
         uses: ./
         with:
-          solution: samples/malformed
+          paths: samples/malformed/automations/*
+          manifest: samples/malformed/governance.yml
           format: text
-      - name: Confirm the two bad samples were rejected
+      - name: Confirm the two bad sets were rejected
         if: ${{ steps.bad.outcome != 'failure' || steps.malformed.outcome != 'failure' }}
-        run: echo "A bad sample was not rejected" && exit 1
+        run: echo "A bad sample set was not rejected" && exit 1

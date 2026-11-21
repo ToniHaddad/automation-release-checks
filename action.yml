@@ -1,8 +1,8 @@
-name: Power Platform release checks
-description: Block an unpacked Power Platform solution with an unapproved connector, no owner or an overdue review.
+name: Automation release checks
+description: Block an n8n or Apps Script automation that uses an unapproved service, has no owner, an overdue review, or a hardcoded secret or email address.
 inputs:
-  solution:
-    description: Folder produced by pac solution unpack
+  paths:
+    description: One or more automation folders, separated by spaces (globs allowed)
     required: true
   manifest:
     description: Governance manifest (YAML)
@@ -19,9 +19,9 @@ runs:
     - uses: actions/setup-python@v5
       with:
         python-version: "3.12"
-    - name: Install pprc
+    - name: Install arc
       shell: bash
       run: python -m pip install --quiet "${{ github.action_path }}"
-    - name: Run pprc check
+    - name: Run arc check
       shell: bash
-      run: pprc check "${{ inputs.solution }}" --manifest "${{ inputs.manifest }}" --rules "${{ inputs.rules }}" --format "${{ inputs.format }}"
+      run: arc check ${{ inputs.paths }} --manifest "${{ inputs.manifest }}" --rules "${{ inputs.rules }}" --format "${{ inputs.format }}"

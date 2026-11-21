@@ -1,0 +1,32 @@
+ARC020  samples/noncompliant/automations/purchase-order-push/PurchaseOrders.gs:16
+    Hardcoded secret: 'STOCK_API_TOKEN' is set to a literal value (stk... (25 characters)) in PurchaseOrders.gs.
+    Fix: Move it to an n8n credential, or to Script Properties in Apps Script, and rotate it because it is now in the repository history.
+ARC010  samples/noncompliant/governance.yml:9
+    Automation 'purchase-order-push' has no business owner.
+    Fix: Set owner to the named person or role accountable for this automation.
+ARC012  samples/noncompliant/governance.yml:9
+    Data classification for 'purchase-order-push' is missing; allowed: public, internal, confidential, restricted.
+    Fix: Set data_classification to one of the allowed values.
+ARC003  samples/noncompliant/automations/rental-reminders/appsscript.json:8
+    Apps Script OAuth scope 'https://mail.google.com/' is not on the approved list.
+    Fix: Remove the scope and the code that needs it, or have it reviewed and added to approved_oauth_scopes.
+ARC021  samples/noncompliant/automations/rental-reminders/Reminders.gs:13
+    Hardcoded email address: the address sami.haddad@example.com in Reminders.gs.
+    Fix: Read recipients from the sheet or a Script Property, or add a shared role mailbox to allowed_email_addresses in the rules file.
+ARC011  samples/noncompliant/governance.yml:7
+    Review for 'rental-reminders' was due 2026-01-31 (295 days overdue).
+    Fix: Hold the review, then move review_date forward.
+ARC001  samples/noncompliant/automations/stock-digest/daily-stock-digest.json:89
+    n8n node type 'n8n-nodes-base.slack' (node 'Post to chat' in workflow 'Daily stock digest') is not on the approved list.
+    Fix: Replace the node with an approved one, or ask the owner of rules.yml to review 'n8n-nodes-base.slack' and add it to approved_n8n_node_types.
+ARC002  samples/noncompliant/automations/stock-digest/daily-stock-digest.json:96
+    n8n credential type 'slackApi' (node 'Post to chat' in workflow 'Daily stock digest') is not on the approved list.
+    Fix: Use an approved credential type, or have 'slackApi' reviewed and added to approved_n8n_credential_types.
+ARC020  samples/noncompliant/automations/stock-digest/daily-stock-digest.json:84
+    Hardcoded secret: parameter 'accessToken' in node 'Post to chat' in workflow 'Daily stock digest' holds a literal value (stk... (25 characters)).
+    Fix: Move it to an n8n credential, or to Script Properties in Apps Script, and rotate it because it is now in the repository history.
+ARC030  samples/noncompliant/automations/stock-digest/daily-stock-digest.json:152
+    Workflow 'Daily stock digest' is active with a schedule trigger but has no error workflow.
+    Fix: In the workflow settings choose an Error workflow (one that starts with an Error Trigger), so a failed run notifies someone.
+
+FAILED: 10 findings.

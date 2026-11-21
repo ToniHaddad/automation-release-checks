@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>arc output</title>
+<style>
+body { margin:0; background:#0f1419; padding:24px; }
+.term { max-width:1180px; margin:0 auto; background:#161c24; border:1px solid #2a3340; border-radius:10px; overflow:hidden; }
+.bar { background:#1d2530; padding:10px 14px; color:#8b98a8; font:13px system-ui,sans-serif; }
+.bar i { display:inline-block; width:11px; height:11px; border-radius:50%; margin-right:6px; background:#3a4656; }
+pre { margin:0; padding:18px 20px; color:#d5dde8; font:13px/1.5 Consolas,"DejaVu Sans Mono",monospace; white-space:pre-wrap; }
+.prompt { color:#7fd1a6; } .rule { color:#ff7b72; font-weight:bold; } .loc { color:#79c0ff; }
+.fix { color:#e3b341; } .fail { color:#ff7b72; font-weight:bold; }
+</style></head><body>
+<div class="term"><div class="bar"><i></i><i></i><i></i> arc check</div>
+<pre><span class="prompt">$</span> arc check samples/noncompliant/automations/* --manifest samples/noncompliant/governance.yml --rules rules.yml
+<span class="rule">ARC020</span>  <span class="loc">samples/noncompliant/automations/purchase-order-push/PurchaseOrders.gs:16</span>
+    Hardcoded secret: &#x27;STOCK_API_TOKEN&#x27; is set to a literal value (stk... (25 characters)) in PurchaseOrders.gs.
+    <span class="fix">Fix:</span> Move it to an n8n credential, or to Script Properties in Apps Script, and rotate it because it is now in the repository history.
+<span class="rule">ARC010</span>  <span class="loc">samples/noncompliant/governance.yml:9</span>
+    Automation &#x27;purchase-order-push&#x27; has no business owner.
+    <span class="fix">Fix:</span> Set owner to the named person or role accountable for this automation.
+<span class="rule">ARC012</span>  <span class="loc">samples/noncompliant/governance.yml:9</span>
+    Data classification for &#x27;purchase-order-push&#x27; is missing; allowed: public, internal, confidential, restricted.
+    <span class="fix">Fix:</span> Set data_classification to one of the allowed values.
+<span class="rule">ARC003</span>  <span class="loc">samples/noncompliant/automations/rental-reminders/appsscript.json:8</span>
+    Apps Script OAuth scope &#x27;https://mail.google.com/&#x27; is not on the approved list.
+    <span class="fix">Fix:</span> Remove the scope and the code that needs it, or have it reviewed and added to approved_oauth_scopes.
+<span class="rule">ARC021</span>  <span class="loc">samples/noncompliant/automations/rental-reminders/Reminders.gs:13</span>
+    Hardcoded email address: the address sami.haddad@example.com in Reminders.gs.
+    <span class="fix">Fix:</span> Read recipients from the sheet or a Script Property, or add a shared role mailbox to allowed_email_addresses in the rules file.
+<span class="rule">ARC011</span>  <span class="loc">samples/noncompliant/governance.yml:7</span>
+    Review for &#x27;rental-reminders&#x27; was due 2026-01-31 (295 days overdue).
+    <span class="fix">Fix:</span> Hold the review, then move review_date forward.
+<span class="rule">ARC001</span>  <span class="loc">samples/noncompliant/automations/stock-digest/daily-stock-digest.json:89</span>
+    n8n node type &#x27;n8n-nodes-base.slack&#x27; (node &#x27;Post to chat&#x27; in workflow &#x27;Daily stock digest&#x27;) is not on the approved list.
+    <span class="fix">Fix:</span> Replace the node with an approved one, or ask the owner of rules.yml to review &#x27;n8n-nodes-base.slack&#x27; and add it to approved_n8n_node_types.
+<span class="rule">ARC002</span>  <span class="loc">samples/noncompliant/automations/stock-digest/daily-stock-digest.json:96</span>
+    n8n credential type &#x27;slackApi&#x27; (node &#x27;Post to chat&#x27; in workflow &#x27;Daily stock digest&#x27;) is not on the approved list.
+    <span class="fix">Fix:</span> Use an approved credential type, or have &#x27;slackApi&#x27; reviewed and added to approved_n8n_credential_types.
+<span class="rule">ARC020</span>  <span class="loc">samples/noncompliant/automations/stock-digest/daily-stock-digest.json:84</span>
+    Hardcoded secret: parameter &#x27;accessToken&#x27; in node &#x27;Post to chat&#x27; in workflow &#x27;Daily stock digest&#x27; holds a literal value (stk... (25 characters)).
+    <span class="fix">Fix:</span> Move it to an n8n credential, or to Script Properties in Apps Script, and rotate it because it is now in the repository history.
+<span class="rule">ARC030</span>  <span class="loc">samples/noncompliant/automations/stock-digest/daily-stock-digest.json:152</span>
+    Workflow &#x27;Daily stock digest&#x27; is active with a schedule trigger but has no error workflow.
+    <span class="fix">Fix:</span> In the workflow settings choose an Error workflow (one that starts with an Error Trigger), so a failed run notifies someone.
+
+<span class="fail">FAILED: 10 findings.</span>
+<span class="prompt">$</span> echo $?
+1</pre></div></body></html>
