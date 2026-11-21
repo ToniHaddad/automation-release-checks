@@ -93,7 +93,7 @@ solution are not read, only connection references and cloud flows.
   - [PR 1](https://github.com/ToniHaddad/power-platform-release-checks/pull/1) adds a flow that archives to Dropbox. It stays open and its "Check solutions/field-reporting" job fails.
   - [PR 2](https://github.com/ToniHaddad/power-platform-release-checks/pull/2) swaps it for the approved SharePoint connector and passes. It targets PR 1's branch.
 
-The two annotations on PR 1, as GitHub recorded them (the repository is private, so these links need a login):
+The two annotations on PR 1, as GitHub recorded them:
 
 ```
 solutions/field-reporting/Workflows/ArchiveReportsToDropbox-4C5D6E7F-8091-4A2B-B3C4-D5E6F7A8B904.json:13
